@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .forms import AddTicketForm
 from django.contrib import messages
+from .models import Ticket
 
 
 @login_required()
@@ -24,4 +25,11 @@ def add_ticket(request):
         form = AddTicketForm()
     return render(request, 'add_ticket.html', context={
         'form': form
+    })
+
+@login_required()
+def my_tickets(request):
+    tickets = Ticket.objects.filter(user=request.user).order_by('-id')
+    return render(request, 'my_tickets.html', context={
+        'tickets':tickets
     })
